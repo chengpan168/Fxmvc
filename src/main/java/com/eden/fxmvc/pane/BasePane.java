@@ -1,0 +1,57 @@
+package com.eden.fxmvc.pane;
+
+import javafx.scene.layout.Pane;
+
+import com.eden.fxmvc.dao.support.Page;
+import com.eden.fxmvc.mvc.action.ActionMessage;
+import com.eden.fxmvc.ui.ModelAndView;
+
+public class BasePane extends Pane {
+	private ModelAndView modelAndView ;
+	
+	public void setModelAndView(ModelAndView modelAndView) {
+		this.modelAndView = modelAndView ;
+	}
+	
+	public ModelAndView getModelAndView() {
+		return modelAndView;
+	}
+	
+	/**
+	 * 取得当前页面所有page参数
+	 * @return
+	 */
+	public Page getQueryPage(){return null ;} ;
+	
+	/**
+	 * 处理所有需要请求到action的事件
+	 */
+	public void process() {};
+
+	/**
+	 * action处理完请求后，执行此方法，用于在页面显示状态，或回调
+	 * @param mv
+	 */
+	public void update(ModelAndView mv) {
+	}
+	
+	/**
+	 * 获得页面上所有需要处理的数据
+	 * @return
+	 */
+	public ActionMessage getActionMessage(){
+		return null ;
+	}
+	
+	/**
+	 * 清空文本框数据
+	 */
+	public void clear(){
+	}
+	
+	public void show() {
+	}
+	
+	public void close(){
+	}
+}

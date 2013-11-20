@@ -1,0 +1,127 @@
+package com.eden.fxmvc.service;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.eden.fxmvc.dao.support.Page;
+import com.eden.fxmvc.service.support.ServiceSupport;
+
+public class EntityServiceImpl<T> implements EntityService<T> {
+	
+	@Autowired
+	private ServiceSupport<T> serviceSupport  ;
+	
+	public int delete(String statementId,Object parameters) {
+		return serviceSupport.delete(statementId, parameters);
+	}
+	
+	@Override
+	public void deleteAll(String statementId,Collection<? extends Object> params) {
+		serviceSupport.deleteAll(statementId, params) ;
+	}
+	
+	@Override
+	public void deleteByPrimaryKey(Serializable id) {
+		serviceSupport.deleteByPrimaryKey(id);
+	}
+	
+	public T findByPrimaryKey(Serializable id){
+		return serviceSupport.findByPrimaryKey(id) ;
+	}
+	
+	public Long getCount() {
+		return serviceSupport.getCount();
+	}
+
+	public Long getCount(String statementId,Object parameters) {
+		return serviceSupport.getCount(statementId, parameters);
+	}
+	
+	@Override
+	public Integer insert(String statememt) {
+		return serviceSupport.insert(statememt) ;
+	}
+
+
+	public Integer insert(String statementId,Object parameters) {
+		return serviceSupport.insert(statementId, parameters);
+	}
+
+	public Integer insert(T o){
+		return serviceSupport.insert(o) ;
+	}
+
+	@Override
+	public void insertAll(String statementId,Collection<? extends Object> params) {
+		serviceSupport.insertAll(statementId , params);
+	}
+	public Object query(String statementId){
+		 return serviceSupport.query(statementId);
+	 }
+	
+	public  Object query(String statementId,Object parameters) {
+	   return serviceSupport.query(statementId,parameters);
+   }
+	
+	public List<? extends Object> selectList(String statementId) {
+		return serviceSupport.selectList(statementId);
+	}
+
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters) {
+		return serviceSupport.selectList(statementId, parameters);
+	}
+	
+	public List<? extends Object> selectPage(String statementId,  Page page){
+		return serviceSupport.selectPage(statementId,  page );
+	}
+	public int selectCount(String statementId,  Page page){
+		return serviceSupport.selectCount(statementId,  page );
+	}
+	
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters, RowBounds rowBounds) {
+		return serviceSupport.selectList(statementId, parameters , rowBounds);
+	}
+	
+    public List<? extends Object> selectList(String statementId , RowBounds rowBounds) {
+		return serviceSupport.selectList(statementId  , rowBounds);
+	}
+	
+    public T selectOne(String statementId) {
+		return  serviceSupport.selectOne(statementId);
+	}
+	@Override
+	public T selectOne(String statementId, Object parameters) {
+		return  serviceSupport.selectOne(statementId, parameters);
+	}
+
+	@Override
+	public void update(String statementId, Object parameters) {
+		serviceSupport.update(statementId, parameters);
+	}
+
+	@Override
+	public void update(T o) {
+		serviceSupport.update(o);
+	}
+
+	@Override
+	public void updateAll(String statementId,Collection<? extends Object> params) {
+		serviceSupport.updateAll( statementId, params);
+	}
+
+	public ServiceSupport<T> getServiceSupport() {
+		return serviceSupport;
+	}
+
+	public void setServiceSupport(ServiceSupport<T> serviceSupport) {
+		this.serviceSupport = serviceSupport;
+	}
+	
+	
+}

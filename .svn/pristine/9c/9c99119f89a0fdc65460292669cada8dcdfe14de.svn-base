@@ -1,0 +1,193 @@
+package com.eden.fxmvc.dao.support;
+
+
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.session.RowBounds;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.eden.fxmvc.dao.DaoService;
+import com.eden.fxmvc.dao.EntityDao;
+
+public class IBatisEntityDao<T> implements EntityDao<T> {
+	
+	public static final Log log = LogFactory.getLog(IBatisEntityDao.class);
+	
+	private Class<T> modelClass;
+	
+	@Autowired
+	private DaoService daoService;
+	
+	@Autowired
+	private BatchExcuter batchExcuter;
+	
+	@PostConstruct
+	public void init() {
+		if (modelClass == null) {
+			modelClass = getGenericModelClass();
+		}
+		log.debug("Model class set suss, name :" + this.modelClass.getName());
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Class<T> getGenericModelClass() {
+		Class<?> clazz = this.getClass();
+		Type type = clazz.getGenericSuperclass();
+		
+		while (!(type instanceof ParameterizedType) && clazz != null && clazz != Object.class) {
+			clazz = clazz.getSuperclass();
+			type = clazz.getGenericSuperclass();
+		}
+		
+		if (!(type instanceof ParameterizedType)) {
+			Class[] clazzes = clazz.getInterfaces();
+			
+			if (clazzes!= null && clazzes.length > 0) {
+				int index = -1;
+				for (int i = 0; i < clazzes.length; i++) {
+					if (EntityDao.class.isAssignableFrom(clazzes[i])) {
+						index = i;
+						break;
+					}
+				}
+				
+				if (index >= 0) {
+					if (clazz.getGenericInterfaces()[index] instanceof ParameterizedType) {
+						type = clazz.getGenericInterfaces()[index];
+					}
+				}
+			}
+		}
+		
+		if(!(type instanceof ParameterizedType)){
+			throw new RuntimeException("Can not find the right Generic Class.");
+		}
+		
+		ParameterizedType pType = (ParameterizedType)type;
+		return (Class<T>)pType.getActualTypeArguments()[0];
+	}
+
+	@Override
+	public void deleteAll(String statementId,Collection<? extends Object> params) {
+		batchExcuter.batchDel(getSqlSessionTemplate() ,daoService.getStatementId(modelClass,statementId) , params);
+	}
+	
+	public Long getCount() {
+		return daoService.getCount(modelClass);
+	}
+	
+	public Long getCount(String statementId,Object parameters) {
+		return daoService.getCount(modelClass, statementId, parameters);
+	}
+
+	@Override
+	public void deleteByPrimaryKey(Serializable id) {
+		daoService.deleteById(modelClass, id);
+	}
+	
+	public int delete(String statementId,Object parameters) {
+		return daoService.delete(modelClass, statementId, parameters);
+	}
+
+	@Override
+	public T findByPrimaryKey(Serializable id) {
+		return daoService.get(modelClass, id);
+	}
+
+	@Override
+	public Integer insert(String statememt) {
+		return daoService._insert(statememt);
+	}
+	
+	@Override
+	public Integer insert(T o) {
+		return daoService._insert(o);
+	}
+	
+	public Integer insert(String statementId,Object parameters) {
+		return daoService._insert(modelClass, statementId, parameters);
+	}
+
+	@Override
+	public void insertAll(String statementId,Collection<? extends Object> params) {
+		batchExcuter.batchInsert(getSqlSessionTemplate() , daoService.getStatementId(modelClass,statementId), params);
+	}
+
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters) {
+		return daoService.selectList(modelClass, statementId, parameters);
+	}
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters, RowBounds rowBounds) {
+		return daoService.selectList(modelClass, statementId, parameters , rowBounds);
+	}
+	
+	public List<? extends Object> selectList(String statementId) {
+		return daoService.selectList(modelClass, statementId);
+	}
+	
+	public List<? extends Object> selectList(String statementId , RowBounds rowBounds) {
+		return daoService.selectList(modelClass, statementId  , rowBounds);
+	}
+	
+	public List<? extends Object> selectPage(String statementId,
+			Page page){
+		return daoService.selectPage(modelClass, statementId  ,  page);
+	}
+	public int selectCount(String statementId,
+			Page page){
+		return daoService.selectCount(modelClass, statementId  ,  page);
+	}
+
+	@Override
+	public T selectOne(String statementId, Object parameters) {
+		return  daoService.selectOne(modelClass, statementId, parameters);
+	}
+	@SuppressWarnings("rawtypes")
+	public Object queryObject(Class c,String statementId, Object parameters) {
+		return  daoService.queryObject(c, statementId, parameters);
+	}
+	
+	public T selectOne(String statementId) {
+		return  daoService.selectOne(modelClass, statementId);
+	}
+	
+    public  Object query(String statementId,Object parameters) {
+	   return daoService.query(modelClass, statementId,parameters);
+   }
+	
+    public Object query(String statementId){
+		 return daoService.query(modelClass, statementId);
+	 }
+	@Override
+	public void update(String statementId, Object parameters) {
+		daoService.update(modelClass, statementId, parameters);
+	}
+
+	@Override
+	public int update(T o) {
+		return daoService._update(o);
+	}
+
+	@Override
+	public void updateAll(String statementId,Collection<? extends Object> params) {
+		batchExcuter.batchUpdate(getSqlSessionTemplate(), statementId, params);
+	}
+	
+    @Override
+    public SqlSessionTemplate getSqlSessionTemplate() {
+    	return null;
+    }
+    
+	
+	
+}

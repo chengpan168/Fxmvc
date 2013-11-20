@@ -1,0 +1,108 @@
+package com.eden.fxmvc.dao;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+
+import com.eden.fxmvc.dao.support.Page;
+
+
+public interface DaoService {
+	
+	public static final String POSTFIX_INSERT = "insert";  
+	  
+    public static final String POSTFIX_UPDATE = "update";  
+  
+    public static final String POSTFIX_DELETE = "delete";  
+  
+    public static final String POSTFIX_DELETE_PRIAMARYKEY = "deleteByPrimaryKey";  
+    
+    public static final String POSTFIX_SELECT_PRIMARYKEY = "selectByPrimaryKey";
+  
+    public static final String POSTFIX_SELECT = "select";  
+  
+    public static final String POSTFIX_SELECT_ALL = "selectAll";  
+  
+    public static final String POSTFIX_SELECTMAP = "selectByMap";  
+  
+    public static final String POSTFIX_SELECTSQL = "selectBySql";  
+  
+    public static final String POSTFIX_COUNT = "count";  
+  
+    public static final String POSTFIX_QUERY = "query"; 
+    
+    public <T> T get(Class<T> entityClass, Serializable id);
+  
+    public Integer _insert(Object o);
+    
+    public <T> Integer _insert(Class<T> entityClass,String statementId,Object parameters);
+  
+    public void _update(Object o);
+  
+    public <T> void deleteById(Class<T> entityClass, Serializable id);
+  
+    public <T> int delete(Class<T> entityClass,String statementId, Object parameters);
+    
+    public Page pagedQuery(Class<?> entityClass, Map<String, ?> parameterObject, int start,  
+            int limit);
+  
+    public Page pagedQuery(Class<?> entityClass, Map<String,?> parameterObject, int start,  
+            int limit, String countSqlId, String pageQuerySqlId);
+  
+  
+	public <T> List<? extends Object> selectList(Class<? extends Object> entityClass, String statementId,  
+            Object parameters);
+    
+	
+	public <T> List<? extends Object> selectList(Class<? extends Object> entityClass, String statementId);
+	
+	public <T> List<? extends Object> selectList(Class<? extends Object> entityClass,
+			String statementId, RowBounds rowBounds);
+	
+	public <T> List<T> queryAll(Class<T> entityClass);
+  
+	public <T> T selectOne(Class<T> entityClass, String statementId);
+	
+	public <T> T selectOne(Class<T> entityClass, String statementId,  
+            Object parameters);
+	
+	public <T> Object query(Class<T> entityClass,String statementId,Object parameters);
+	 	
+	public <T> Object query(Class<T> entityClass,String statementId);
+  
+    public void update(Class<?> entityClass, String statementId, Object parameters);
+    
+    public <T> Long getCount(Class<T> entityClass);
+    
+    public <T> Long getCount(Class<T> entityClass,String statementId,Object parameters);
+    
+    public String getStatementId(Class<?> entityClass, String suffix);
+	
+	public Connection getConnection() throws SQLException;
+	public DataSource getDataSourceFromSqlMap() throws SQLException;
+
+	@SuppressWarnings("rawtypes")
+	public Object queryObject(Class c, String statementId, Object parameters);
+
+	public SqlSession getSqlSessionTemplate();
+
+	public Integer _insert(String statement);
+
+	public <T> List<? extends Object> selectList(Class<? extends Object> entityClass,
+			String statementId, Object parameters, RowBounds rowBounds);
+	
+	public <T> List<? extends Object> selectPage(Class<? extends Object> entityClass,
+			String statementId, Page page);
+	
+	public int selectCount(Class<? extends Object> entityClass,
+			String statementId, Page page);
+
+	
+}

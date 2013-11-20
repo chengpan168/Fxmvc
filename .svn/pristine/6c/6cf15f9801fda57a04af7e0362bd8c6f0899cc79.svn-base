@@ -1,0 +1,128 @@
+package com.eden.fxmvc.service.support;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eden.fxmvc.dao.EntityDao;
+import com.eden.fxmvc.dao.support.Page;
+
+@Service("serviceSupport")
+public class DefaultServiceSupport<T> implements ServiceSupport<T>{
+	
+	@Autowired
+	private EntityDao<T> entityDao ;
+	
+	public int delete(String statementId,Object parameters) {
+		return entityDao.delete(statementId, parameters);
+	}
+	
+	@Override
+	public void deleteAll(String statementId,Collection<? extends Object> params) {
+		entityDao.deleteAll(statementId, params) ;
+	}
+	
+	@Override
+	public void deleteByPrimaryKey(Serializable id) {
+		entityDao.deleteByPrimaryKey(id);
+	}
+	
+	public T findByPrimaryKey(Serializable id){
+		return entityDao.findByPrimaryKey(id) ;
+	}
+	
+	public Long getCount() {
+		return entityDao.getCount();
+	}
+
+	public Long getCount(String statementId,Object parameters) {
+		return entityDao.getCount(statementId, parameters);
+	}
+	
+	@Override
+	public Integer insert(String statememt) {
+		return entityDao.insert(statememt) ;
+	}
+
+
+	public Integer insert(String statementId,Object parameters) {
+		return entityDao.insert(statementId, parameters);
+	}
+
+	public Integer insert(T o){
+		return entityDao.insert(o) ;
+	}
+
+	@Override
+	public void insertAll(String statementId,Collection<? extends Object> params) {
+		entityDao.insertAll(statementId , params);
+	}
+	public Object query(String statementId){
+		 return entityDao.query(statementId);
+	 }
+	
+	public  Object query(String statementId,Object parameters) {
+	   return entityDao.query(statementId,parameters);
+   }
+	
+	public List<? extends Object> selectList(String statementId) {
+		return entityDao.selectList(statementId);
+	}
+
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters) {
+		return entityDao.selectList(statementId, parameters);
+	}
+	
+	public List<? extends Object> selectPage(String statementId,  Page page){
+		return entityDao.selectPage(statementId,  page );
+	}
+	public int selectCount(String statementId,  Page page){
+		return entityDao.selectCount(statementId,  page );
+	}
+	
+	@Override
+	public List<? extends Object> selectList(String statementId, Object parameters, RowBounds rowBounds) {
+		return entityDao.selectList(statementId, parameters , rowBounds);
+	}
+	
+    public List<? extends Object> selectList(String statementId , RowBounds rowBounds) {
+		return entityDao.selectList(statementId  , rowBounds);
+	}
+	
+    public T selectOne(String statementId) {
+		return  entityDao.selectOne(statementId);
+	}
+	@Override
+	public T selectOne(String statementId, Object parameters) {
+		return  entityDao.selectOne(statementId, parameters);
+	}
+
+	@Override
+	public void update(String statementId, Object parameters) {
+		entityDao.update(statementId, parameters);
+	}
+
+	@Override
+	public int update(T o) {
+		return entityDao.update(o);
+	}
+
+	@Override
+	public void updateAll(String statementId,Collection<? extends Object> params) {
+		entityDao.updateAll( statementId, params);
+	}
+
+
+	public EntityDao<T> getEntityDao() {
+		return entityDao;
+	}
+
+	public void setEntityDao(EntityDao<T> entityDao) {
+		this.entityDao = entityDao;
+	}
+}

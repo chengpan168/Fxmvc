@@ -1,0 +1,56 @@
+package com.eden.fxmvc.dao.support;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
+public class BatchExcuter {
+	
+	@SuppressWarnings("rawtypes")
+	public List batchInsert(SqlSessionTemplate sqlSessionTemplate , final String statement,final Collection<? extends Object> col) {
+		final  List list = new LinkedList();
+//		sqlSessionTemplate.getSqlSessionFactory().openSession(, autoCommit)
+		/*sqlSessionTemplate.execute(new SqlMapClientCallback<Object>() {
+			public Object doInSqlMapClient(SqlMapExecutor executor)
+					throws SQLException {
+				executor.startBatch();
+				for (Object obj : col) {
+					obj = executor.insert(statement, obj);
+					list.add(obj);
+				}
+				return executor.executeBatch();
+			}
+		});*/
+		return list;
+	}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+	public void batchDel(SqlSessionTemplate sqlSessionTemplate  , final String statement,final Collection<? extends Object> col) {
+		/*sqlMapClientTemplate.execute(new SqlMapClientCallback<Object>() {
+			public Object doInSqlMapClient(SqlMapExecutor executor)
+					throws SQLException {
+				
+				executor.startBatch();
+				for (Object obj : col) {
+					executor.delete(statement, obj);
+				}
+				return executor.executeBatch();
+			}
+		});*/
+	}
+	
+	public void batchUpdate(SqlSessionTemplate sqlSessionTemplate  , final String statement,final Collection<? extends Object> col) {
+		/*sqlMapClientTemplate.execute(new SqlMapClientCallback<Object>() {
+			public Object doInSqlMapClient(SqlMapExecutor executor)
+					throws SQLException {
+				
+				executor.startBatch();
+				for (Object obj : col) {
+					executor.update(statement, obj);
+				}
+				return executor.executeBatch();
+			}
+		});*/
+	}
+}

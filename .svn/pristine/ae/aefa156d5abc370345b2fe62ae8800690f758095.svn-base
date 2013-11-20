@@ -1,0 +1,133 @@
+package com.eden.fxmvc.ui;
+
+import java.util.Map;
+
+public class ModelAndView {
+
+	private String view;
+	private String viewTarget ;
+	
+	private ModelMap model;
+	
+	private boolean cleared = false;
+	private static final String STATUS = "_status" ;
+	
+	public ModelAndView() {}
+	
+
+	public ModelAndView(String viewName) {
+		this.view = viewName;
+	}
+
+	public ModelAndView(String viewName, Map<String, ?> model) {
+		this.view = viewName;
+		if (model != null) {
+			getModelMap().addAllAttributes(model);
+		}
+	}
+
+
+	public ModelAndView(String viewName, String modelName, Object modelObject) {
+		this.view = viewName;
+		addObject(modelName, modelObject);
+	}
+
+
+
+	public void setViewName(String viewName) {
+		this.view = viewName;
+	}
+	public void setViewTarget(String target){
+		this.viewTarget = target ;
+	}
+
+	public String getViewTarget(){
+		return this.viewTarget ;
+	}
+	public String getViewName() {
+		return (this.view instanceof String ? (String) this.view : null);
+	}
+
+	public boolean hasView() {
+		return (this.view != null);
+	}
+
+	public boolean isReference() {
+		return (this.view instanceof String);
+	}
+
+	protected Map<String, Object> getModelInternal() {
+		return this.model;
+	}
+
+	public ModelMap getModelMap() {
+		if (this.model == null) {
+			this.model = new ModelMap();
+		}
+		return this.model;
+	}
+
+	public Map<String, Object> getModel() {
+		return getModelMap();
+	}
+
+	public ModelAndView addObject(String attributeName, Object attributeValue) {
+		getModelMap().addAttribute(attributeName, attributeValue);
+		return this;
+	}
+	
+	public ModelAndView addAttribute(String attributeName, Object attributeValue) {
+		getModelMap().addAttribute(attributeName, attributeValue);
+		return this;
+	}
+	
+	public Object getAttribute(String attributeName) {
+		return getModelMap().get(attributeName);
+	}
+	
+	public void removeAttribute(String attributeName){
+		getModel().remove(attributeName);
+	}
+
+	public ModelAndView addAllObjects(Map<String, ?> modelMap) {
+		getModelMap().addAllAttributes(modelMap);
+		return this;
+	}
+
+
+	public void setStatus(String status) {
+		addAttribute(STATUS, status) ;
+	}
+	
+	public String getStatus(){
+		return (String) getAttribute(STATUS) ;
+	}
+	
+	public void clear() {
+		this.view = null;
+		this.model = null;
+		this.cleared = true;
+	}
+
+	public boolean isEmpty() {
+		return (this.view == null && (model == null || model.size() == 0));
+	}
+
+	public boolean wasCleared() {
+		return (this.cleared && isEmpty());
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("ModelAndView: ");
+		if (isReference()) {
+			sb.append("reference to view with name '").append(this.view).append("'");
+		}
+		else {
+			sb.append("materialized View is [").append(this.view).append(']');
+		}
+		sb.append("; model is ").append(this.model);
+		return sb.toString();
+	}
+	
+}

@@ -1,0 +1,60 @@
+package com.eden.fxmvc.service.support;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
+
+import com.eden.fxmvc.dao.support.Page;
+
+public interface ServiceSupport<T> {
+
+	T findByPrimaryKey(Serializable id);
+	
+	Integer insert(T o);
+	
+	Integer insert(String statementId,Object parameters);
+	
+	void insertAll(String statementId,Collection<? extends Object> params);
+	
+	void update(T o);
+	
+	void update(String statementId,Object parameters);
+	
+	void updateAll(String statementId,Collection<? extends Object> params);
+	
+	void deleteByPrimaryKey(Serializable id);
+	
+	int delete(String statementId,Object parameters);
+	
+	void deleteAll(String statementId,Collection<? extends Object> params);
+	
+	Long getCount();
+	
+	Long getCount(String statementId,Object parameters);
+	
+	T selectOne(String statementId,Object parameters);
+	
+	T selectOne(String statementId);
+	
+    Object query(String statementId,Object parameters);
+	
+	Object query(String statementId);
+	
+	List<? extends Object> selectList(String statementId, Object parameters);
+	
+	List<? extends Object> selectList(String statementId, Object parameters,
+			RowBounds rowBounds);
+	
+	List<? extends Object> selectList(String statementId);
+	
+	List<? extends Object> selectList(String statementId ,RowBounds rowBounds);
+	
+	public Integer insert(String statememt);
+
+	public List<? extends Object> selectPage(String statementId, 
+			Page page);
+	public int selectCount(String statementId, 
+			Page page);
+}

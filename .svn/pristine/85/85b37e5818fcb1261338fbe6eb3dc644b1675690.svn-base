@@ -1,0 +1,198 @@
+package com.eden.fxmvc.util;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.format.datetime.DateFormatter;
+
+public class TypeConvertUtil {
+	
+	public static <S , T>  T toTarget(S  source , Class<T> clazz ){
+		return toTarget(source, clazz , true ) ;
+	}
+	@SuppressWarnings("unchecked")
+	public static <S , T>  T toTarget(S  source , Class<T> clazz , boolean isNew){
+		try{
+			if(source == null){
+				if(isNew){
+					return clazz.newInstance() ;
+				} else {
+					return null ;
+				}
+			}
+			return (T)source ;
+		} catch(Exception e) {
+			e.printStackTrace() ;
+			if(isNew){
+				try {
+					return clazz.newInstance() ;
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					return null;
+				}
+			} else {
+				return null ;
+			}
+		}
+	}
+	
+	public static Double toDouble(Object obj) {
+		return toDouble(obj , -1d , false) ;
+	}
+	
+	public static Double toDouble(Object obj , Double defaultValue) {
+		return toDouble(obj , defaultValue , false) ;
+	}
+	public static Double toDouble(Object obj , Double defaultValue , boolean throwException){
+		if(obj == null) return null ;
+		try {
+			if(obj instanceof String){
+				return Double.valueOf((String) obj) ;
+			} else if(obj instanceof Number) {
+				return ((Number)obj).doubleValue() ;
+			} else if(obj instanceof Boolean) {
+				if((Boolean)obj)
+					return 1d ;
+				else {
+					return 0d ;
+				}
+			} else {
+				return Double.valueOf(obj.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
+			if(throwException){
+				throw new TypeConvertException() ;
+			} else {
+				return defaultValue ;
+			}
+		} 
+	}
+	
+	
+	
+	public static String toStr(Object value) {
+		if(value == null) return null ;
+		else if(value instanceof Date) {
+			return toStr(value , "yyyy-MM-dd HH:mm:ss") ;
+		} else {
+			return value.toString() ;
+		}
+	}
+	
+	public static String toStr(Object value , String datePattern){
+		if(value == null) return "" ;
+		else if(value instanceof Date){
+			return DateFormatUtils.format((Date)value, datePattern) ;
+		} else {
+			return value.toString() ;
+		}
+	}
+	
+	public static Integer toInteger(Object obj){
+		return toInteger(obj , -1 , false) ;
+	}
+	
+	public static Integer toInteger(Object obj , int defaultValue){
+		return toInteger(obj , defaultValue , false) ;
+	}
+	
+	/**
+	 * 转换为Integer类型
+	 * true= 1 ， false=0 ， "1"=1 
+	 * @param obj
+	 * @param defaultValue 如果失败返回默认值
+	 * @param throwException 转换出错时，返回默认值还是抛出异常
+	 * @return
+	 * @throws 抛出TypeConvertException
+	 */
+	public static Integer toInteger(Object obj , Integer defaultValue , boolean throwException){
+		if(obj==null){
+			return null ;
+		} else {
+			try {
+				if(obj instanceof Number) {
+					return ((Number)obj).intValue() ;
+				} else if(obj instanceof String) {
+					return Integer.parseInt((String) obj) ;
+				} else if(obj instanceof Boolean) {
+					if((Boolean)obj)
+						return 1 ;
+					else {
+						return 0 ;
+					}
+				} else {
+					return Integer.parseInt(obj.toString()) ;
+				}
+			} catch (Exception e) {
+				e.printStackTrace() ;
+				if(throwException){
+					throw new TypeConvertException() ;
+				} else {
+					return defaultValue ;
+				}
+			}
+		}
+	}
+
+	public static int toInt(Object obj) {
+		return toInt(obj, -1, false) ;
+	}
+	
+	public static int toInt(Object obj, int defaultValue , boolean throwException) {
+		if(obj==null){
+			return defaultValue ;
+		} else {
+			try {
+				if(obj instanceof Number) {
+					return ((Number)obj).intValue() ;
+				} else if(obj instanceof String) {
+					return Integer.parseInt((String) obj) ;
+				} else if(obj instanceof Boolean) {
+					if((Boolean)obj)
+						return 1 ;
+					else {
+						return 0 ;
+					}
+				} else {
+					return Integer.parseInt(obj.toString()) ;
+				}
+			} catch (Exception e) {
+				e.printStackTrace() ;
+				if(throwException){
+					throw new TypeConvertException() ;
+				} else {
+					return defaultValue ;
+				}
+			}
+		}
+	}
+	public static Timestamp toTimestamp(Object value) {
+		if(value == null) return null ;
+		if(value instanceof Timestamp) return (Timestamp) value ;
+		else if(value instanceof Date){
+			return new Timestamp(((Date)value).getTime()) ;
+		} else if(value instanceof String) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd") ;
+			try {
+				return new Timestamp(df.parse(value.toString()).getTime()) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null ;
+			}
+		}
+		return null;
+	}
+	
+}
+class TypeConvertException extends RuntimeException{
+	private static final long serialVersionUID = 1L;
+	public TypeConvertException(){}
+	public TypeConvertException(String msg ){
+		super(msg) ;
+	}
+}

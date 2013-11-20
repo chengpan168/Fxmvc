@@ -1,0 +1,205 @@
+package com.eden.fxmvc.dao.support;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+
+import com.eden.fxmvc.dao.DaoService;
+
+public class DefaultDaoServiceImpl extends SqlSessionDaoSupport implements
+		DaoService {
+	/**
+	 * 根据ID获取对象
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T get(Class<T> entityClass, Serializable id) {
+		T o = (T) getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, POSTFIX_SELECT_PRIMARYKEY), id);
+		return o;
+	}
+
+	@Override
+	public Integer _insert(String statement) {
+		return getSqlSessionTemplate().insert(statement);
+	}
+
+	/**
+	 * 新增对象
+	 */
+	public Integer _insert(Object o) {
+		return (Integer) getSqlSessionTemplate().insert(
+				getStatementId(o.getClass(), POSTFIX_INSERT), o);
+	}
+
+	public <T> Integer _insert(Class<T> entityClass, String statementId,
+			Object parameters) {
+		return (Integer) getSqlSessionTemplate().insert(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	/**
+	 * 保存对象
+	 */
+	public void _update(Object o) {
+		getSqlSessionTemplate().update(
+				getStatementId(o.getClass(), POSTFIX_UPDATE), o);
+	}
+
+	/**
+	 * 根据ID删除对象
+	 */
+	public <T> void deleteById(Class<T> entityClass, Serializable id) {
+		getSqlSessionTemplate().delete(
+				getStatementId(entityClass, POSTFIX_DELETE_PRIAMARYKEY), id);
+	}
+
+	public <T> int delete(Class<T> entityClass, String statementId,
+			Object parameters) {
+		return getSqlSessionTemplate().delete(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	public Page pagedQuery(Class<?> entityClass,
+			Map<String, ?> parameterObject, int start, int limit) {
+		return null;
+	}
+
+	public Page pagedQuery(Class<?> entityClass,
+			Map<String, ?> parameterObject, int start, int limit,
+			String countSqlId, String pageQuerySqlId) {
+		return null;
+	}
+
+	/**
+	 * sql-name mapping sql
+	 * 
+	 * @param entityClass
+	 * @param suffix
+	 * @return
+	 */
+	public String getStatementId(Class<?> entityClass, String suffix) {
+		// String className = entityClass.getName();
+		// String shortName =
+		// className.replace(entityClass.getPackage().getName()
+		// + ".", "");
+		String shortName = entityClass.getSimpleName();
+		return shortName + "." + suffix;
+	}
+
+	public <T> List<? extends Object> selectList(
+			Class<? extends Object> entityClass, String statementId,
+			Object parameters) {
+		return getSqlSessionTemplate().selectList(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	@Override
+	public <T> List<? extends Object> selectList(
+			Class<? extends Object> entityClass, String statementId,
+			Object parameters, RowBounds rowBounds) {
+		return getSqlSessionTemplate()
+				.selectList(getStatementId(entityClass, statementId),
+						parameters, rowBounds);
+	}
+
+	public <T> List<? extends Object> selectList(
+			Class<? extends Object> entityClass, String statementId) {
+		return getSqlSessionTemplate().selectList(
+				getStatementId(entityClass, statementId));
+	}
+
+	public <T> List<? extends Object> selectPage(
+			Class<? extends Object> entityClass, String statementId, Page page) {
+		RowBounds rowBounds = new RowBounds(page.getStart(), page.getPageSize()
+				+ page.getStart());
+		return getSqlSessionTemplate().selectList(
+				getStatementId(entityClass, statementId), page, rowBounds);
+	}
+
+	public int selectCount(
+			Class<? extends Object> entityClass, String statementId, Page page) {
+		return getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId), page );
+	}
+
+	@Override
+	public <T> List<? extends Object> selectList(
+			Class<? extends Object> entityClass, String statementId,
+			RowBounds rowBounds) {
+		return getSqlSessionTemplate().selectList(
+				getStatementId(entityClass, statementId), null, rowBounds);
+	}
+
+	public <T> List<T> queryAll(Class<T> entityClass) {
+		return getSqlSessionTemplate().selectList(
+				getStatementId(entityClass, POSTFIX_SELECT_ALL));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T selectOne(Class<T> entityClass, String statementId,
+			Object parameters) {
+		return (T) getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Object queryObject(Class entityClass, String statementId,
+			Object parameters) {
+		return getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	public <T> Object query(Class<T> entityClass, String statementId,
+			Object parameters) {
+		return getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	public <T> Object query(Class<T> entityClass, String statementId) {
+		return getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T selectOne(Class<T> entityClass, String statementId) {
+		return (T) getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId));
+	}
+
+	public void update(Class<?> entityClass, String statementId,
+			Object parameters) {
+		getSqlSessionTemplate().update(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	public <T> Long getCount(Class<T> entityClass) {
+		return (Long) getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, POSTFIX_COUNT));
+	}
+
+	public <T> Long getCount(Class<T> entityClass, String statementId,
+			Object parameters) {
+		return (Long) getSqlSessionTemplate().selectOne(
+				getStatementId(entityClass, statementId), parameters);
+	}
+
+	public Connection getConnection() throws SQLException {
+		return getSqlSessionTemplate().getConnection();
+	}
+
+	public DataSource getDataSourceFromSqlMap() throws SQLException {
+		return null;
+	}
+
+	public SqlSession getSqlSessionTemplate() {
+		return getSqlSession();
+	}
+}

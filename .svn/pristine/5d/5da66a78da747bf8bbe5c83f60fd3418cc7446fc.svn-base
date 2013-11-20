@@ -1,0 +1,65 @@
+package com.eden.fxmvc.util;
+
+import java.lang.reflect.Field;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.eden.fxmvc.bean.DefaultBeanWraper;
+import com.eden.fxmvc.bean.SpringBeanWraper;
+import com.eden.fxmvc.mvc.action.ActionMessage;
+import com.eden.fxmvc.mvc.annotation.ViewColumn;
+
+public class BeanUtil {
+	public static void copyProperty(Object entity , ActionMessage actionMessage ){
+		for(Entry<String, Object> entry : actionMessage.entrySet()){
+			SpringBeanWraper bean = new DefaultBeanWraper(entity) ;
+			bean.setPropertyValue(entry.getKey(), entry.getValue()) ;
+		}
+	}
+	
+	public static String getPropertyNameCn(Class<? extends Object> clazz , String propertyEnName){
+		Field[] fields = clazz.getDeclaredFields() ;
+		for(Field field : fields) {
+			ViewColumn column = field.getAnnotation(ViewColumn.class) ;
+			if(column != null ) {
+				if(StringUtils.isNotBlank(column.nameEn())){
+					if(StringUtils.equals(propertyEnName, column.nameEn())){
+						return column.nameEn() ;
+					}
+				} else {
+					if(StringUtils.equals(propertyEnName, field.getName())){
+						return column.nameEn() ;
+					}
+				}
+				
+			}
+			
+		}
+		return null ;
+	}
+	
+	/**
+	 * get the chinese name of a property throug the class annotation 
+	 * @param clazz
+	 * @param propertyCnName
+	 * @return
+	 */
+	public static String getPropertyNameEn(Class<? extends Object> clazz , String propertyCnName){
+		Field[] fields = clazz.getDeclaredFields() ;
+		for(Field field : fields) {
+			ViewColumn column = field.getAnnotation(ViewColumn.class) ;
+			if(column != null ) {
+				if(StringUtils.equals(propertyCnName, column.nameCn())){
+					if(StringUtils.isBlank(column.nameEn())) {
+						return field.getName() ;
+					} else {
+						return column.nameEn() ;
+					}
+				}
+			}
+			
+		}
+		return null ;
+	}
+}
